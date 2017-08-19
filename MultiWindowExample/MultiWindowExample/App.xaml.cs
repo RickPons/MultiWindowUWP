@@ -1,100 +1,92 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
+﻿using Caliburn.Micro;
+using MultiWindowExample.Interfaces;
+using MultiWindowExample.Services;
+using MultiWindowExample.ViewModels;
+using System;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace MultiWindowExample
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    public sealed partial class App
     {
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
+        private WinRTContainer container;
+        private IEventAggregator eventAggregator;
+        private IWindowManagerService windowMangerService;
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
         }
-
-        /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used such as when the application is launched to open a specific file.
-        /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnActivated(IActivatedEventArgs args)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            base.OnActivated(args);
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+            DisplayRootViewFor<MainPageViewModel>();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
+           
 
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-            }
-
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                }
-                // Ensure the current window is active
-                Window.Current.Activate();
-            }
         }
-
-        /// <summary>
-        /// Invoked when Navigation to a certain page fails
-        /// </summary>
-        /// <param name="sender">The Frame which failed navigation</param>
-        /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        protected override void Configure()
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            container = new WinRTContainer();
+
+
+        
+            container.RegisterWinRTServices();
+
+            container.Singleton<IWindowManagerService, WindowManagerService>();
+            container.PerRequest<MainPageViewModel>();
+            container.PerRequest<ChildShellViewModel>();
+            container.PerRequest<CarDetailsViewModel>();
+            container.PerRequest<CarsViewModel>();
+          
         }
 
-        /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
-        /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        protected override object GetInstance(Type service, string key)
         {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
+            var instance = container.GetInstance(service, key);
+
+          
+
+            return instance;
         }
+
+
+
+
+        protected override Frame CreateApplicationFrame()
+        {
+            return base.CreateApplicationFrame();
+        }
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            // Note we're using DisplayRootViewFor (which is view model first)
+            // this means we're not creating a root frame and just directly
+            // inserting ShellView as the Window.Content
+
+            DisplayRootViewFor<MainPageViewModel>();
+
+          //  UIDispatcherHelper.Initialize();
+            windowMangerService = IoC.Get<IWindowManagerService>();
+            windowMangerService.Initialize(ApplicationView.GetForCurrentView().Id);
+            ApplicationView.GetForCurrentView().Consolidated += ViewConsolidated;
+           
+        }
+
+        private void ViewConsolidated(ApplicationView sender, ApplicationViewConsolidatedEventArgs args)
+        {
+            App.Current.Exit();
+        }
+
+     
+
+       
+
     }
 }
