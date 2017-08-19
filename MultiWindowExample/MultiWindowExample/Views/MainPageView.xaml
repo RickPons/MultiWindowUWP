@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
-            <Button Width="150" Margin="12">Images</Button>
+
             <Button Width="150" Command="{Binding ShowCarsCommand}">Cars</Button>
         </StackPanel>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Main Window</TextBlock>
