@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using MultiWindowExample.Interfaces;
+using MultiWindowExample.Models;
+using MultiWindowExample.Views;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using MultiWindowExample.Interfaces;
-using MultiWindowExample.Models;
-using MultiWindowExample.Views;
-using Caliburn.Micro;
 
 namespace MultiWindowExample.Services
 {
@@ -92,7 +92,6 @@ namespace MultiWindowExample.Services
                         viewControl = viewControl
                     });
 
-                    // You have to activate the window in order to show it later.
                     Window.Current.Activate();
 
 
@@ -105,8 +104,6 @@ namespace MultiWindowExample.Services
                     ApplicationView.GetForCurrentView().Id,
                     ViewSizePreference.UseHalf);
 
-                //bool viewShown=  await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id);
-
 
 
                 if (!viewShown)
@@ -117,11 +114,7 @@ namespace MultiWindowExample.Services
                 viewControl.StopViewInUse();
 
             }
-            else
-            {
-                //  await ApplicationViewSwitcher.TryShowAsStandaloneAsync(activeWindow.Id);
-
-            }
+           
 
         }
 

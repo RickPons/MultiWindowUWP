@@ -27,7 +27,6 @@ namespace MultiWindowExample
 
             DisplayRootViewFor<MainPageViewModel>();
 
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
 
            
 
@@ -66,13 +65,9 @@ namespace MultiWindowExample
         }
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            // Note we're using DisplayRootViewFor (which is view model first)
-            // this means we're not creating a root frame and just directly
-            // inserting ShellView as the Window.Content
+            
 
             DisplayRootViewFor<MainPageViewModel>();
-
-          //  UIDispatcherHelper.Initialize();
             windowMangerService = IoC.Get<IWindowManagerService>();
             windowMangerService.Initialize(ApplicationView.GetForCurrentView().Id);
             ApplicationView.GetForCurrentView().Consolidated += ViewConsolidated;

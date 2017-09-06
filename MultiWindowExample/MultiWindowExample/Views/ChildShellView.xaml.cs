@@ -18,7 +18,6 @@ namespace MultiWindowExample.Views
     {
 
         public ViewLifetimeControl thisViewControl;
-        public string Name;
         int mainViewId;
 
         IWindowManagerService windowManagerService = null;
