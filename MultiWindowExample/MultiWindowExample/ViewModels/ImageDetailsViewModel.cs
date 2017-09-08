@@ -1,19 +1,34 @@
-﻿using System;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using MultiWindowExample.Interfaces;
 using System.Linq;
 
 namespace MultiWindowExample.ViewModels
 {
-    public class CarDetailsViewModel:Screen
+    public class ImageDetailsViewModel:Screen
     {
+
+        public object Parameter { get; set; }
         IWindowManagerService windowService;
         public RelayCommand BackCommand { get; set; }
-        public CarDetailsViewModel()
+        public ImageDetailsViewModel()
         {
             BackCommand = new RelayCommand(BackCommandExecute);
             windowService = IoC.Get<IWindowManagerService>();
         }
+
+
+        private string imageUrl;
+
+        public string ImageUrl
+        {
+            get { return imageUrl; }
+            set
+            {
+                imageUrl = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
 
         private void BackCommandExecute()
         {
@@ -28,7 +43,18 @@ namespace MultiWindowExample.ViewModels
             {
                 navigationService.GoBack();
             }
+           
 
+        }
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            var img = Parameter as MultiWindowExample.Models.Image;
+            if (img != null)
+            {
+                ImageUrl = img.contentUrl;
+            }
         }
     }
 }

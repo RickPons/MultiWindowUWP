@@ -8,11 +8,41 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Vertical">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontFamily="Segoe UI Light"
+                FontSize="48"
+                Text="Multiple Windows in UWP &amp; MVVM"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button
+                    Margin="12"
+                    Background="#330079CC"
+                    Command="{Binding ShowCarsCommand}"
+                    Content="Show Sport Cars"
+                    Foreground="White" />
+                <Button
+                    Margin="12"
+                    Background="#33E63C04"
+                    Command="{Binding ShowBuildingsCommand}"
+                    Content="Show Buildings"
+                    Foreground="White" />
+                <Button
+                    Margin="12"
+                    Background="#330E00CC"
+                    Command="{Binding ShowPyramidsCommand}"
+                    Content="Show Pyramids"
+                    Foreground="White" />
 
-            <Button Width="150" Command="{Binding ShowCarsCommand}">Cars</Button>
+
+            </StackPanel>
         </StackPanel>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Main Window</TextBlock>
 
     </Grid>
 </Page>

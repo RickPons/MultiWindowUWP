@@ -15,7 +15,6 @@ namespace MultiWindowExample
     public sealed partial class App
     {
         private WinRTContainer container;
-        private IEventAggregator eventAggregator;
         private IWindowManagerService windowMangerService;
         public App()
         {
@@ -40,10 +39,11 @@ namespace MultiWindowExample
             container.RegisterWinRTServices();
 
             container.Singleton<IWindowManagerService, WindowManagerService>();
+            container.PerRequest<IBingSearchService, BingSearchService>();
             container.PerRequest<MainPageViewModel>();
             container.PerRequest<ChildShellViewModel>();
-            container.PerRequest<CarDetailsViewModel>();
-            container.PerRequest<CarsViewModel>();
+            container.PerRequest<ImageDetailsViewModel>();
+            container.PerRequest<ImagesViewModel>();
           
         }
 
@@ -73,7 +73,13 @@ namespace MultiWindowExample
             ApplicationView.GetForCurrentView().Consolidated += ViewConsolidated;
            
         }
-
+        /// <summary>
+        /// Should consider letting  the secondary views continue to live and hide the main view
+        /// This example shows a specific scenario how to close all views if the main view is closed.
+        ///https://docs.microsoft.com/en-us/uwp/api/Windows.UI.Xaml.Application#Windows_UI_Xaml_Application_Exit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void ViewConsolidated(ApplicationView sender, ApplicationViewConsolidatedEventArgs args)
         {
             App.Current.Exit();

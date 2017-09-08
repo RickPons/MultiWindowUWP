@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace MultiWindowExample.ViewModels
@@ -30,6 +31,8 @@ namespace MultiWindowExample.ViewModels
 
             _container.RegisterInstance(typeof(INavigationService), navigationServiceName, new FrameAdapter(frame));
             navigationService = IoC.Get<INavigationService>(navigationServiceName);
+           
+           
             await Task.Delay(500);
             var result = navigationService.NavigateToViewModel(RootViewModel, parameters);
 
@@ -38,16 +41,5 @@ namespace MultiWindowExample.ViewModels
         }
 
      
-
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            base.OnDeactivate(close);
-        }
     }
 }

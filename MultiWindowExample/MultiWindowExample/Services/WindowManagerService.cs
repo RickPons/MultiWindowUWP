@@ -11,6 +11,8 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace MultiWindowExample.Services
 {
@@ -91,7 +93,9 @@ namespace MultiWindowExample.Services
                         Id = newViewId,
                         viewControl = viewControl
                     });
-
+                    var navigationService = IoC.Get<INavigationService>(navigationServiceName);
+                    navigationService.BackRequested += NavigationService_BackRequested;
+                    navigationService.Navigated += NavigationService_Navigated;
                     Window.Current.Activate();
 
 
@@ -99,12 +103,7 @@ namespace MultiWindowExample.Services
                 });
                 viewControl.StartViewInUse();
 
-                bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id,
-                    ViewSizePreference.UseHalf,
-                    ApplicationView.GetForCurrentView().Id,
-                    ViewSizePreference.UseHalf);
-
-
+                bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id);
 
                 if (!viewShown)
                 {
@@ -114,8 +113,49 @@ namespace MultiWindowExample.Services
                 viewControl.StopViewInUse();
 
             }
+            else
+            {
+                var navigationService = IoC.Get<INavigationService>(activeWindow.NavigationServiceName);
+                if (navigationService == null)
+                    return;
+               await activeWindow.viewControl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => 
+                {
+                    var currentSource = navigationService.SourcePageType;
+                    navigationService.NavigateToViewModel(viewModelToNavigate, parameters);
+                    await ApplicationViewSwitcher.SwitchAsync(activeWindow.Id, mainId, ApplicationViewSwitchingOptions.Default);
+                    
+                });
+              
+            }
            
 
+        }
+
+        private void NavigationService_Navigated(object sender, NavigationEventArgs e)
+        {
+            var frame = sender as Frame;
+            if (frame == null)
+                return;
+            if (frame.CanGoBack)
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            }
+            else
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+
+            }
+        }
+
+        private void NavigationService_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            var frame = sender as FrameAdapter;
+            if (frame == null)
+                return;
+            if (frame.CanGoBack)
+            {
+                frame.GoBack();
+            }
         }
 
         private void ViewControl_Released(object sender, EventArgs e)
@@ -131,6 +171,9 @@ namespace MultiWindowExample.Services
             if (activeWindow != null)
             {
                 ActiveWindows.Remove(activeWindow);
+                var navigationService = IoC.Get<INavigationService>(activeWindow.NavigationServiceName);
+                navigationService.BackRequested -= NavigationService_BackRequested;
+                navigationService.Navigated -= NavigationService_Navigated;
                 var container = IoC.Get<WinRTContainer>();
                 if (container.HasHandler(typeof(INavigationService), activeWindow.NavigationServiceName))
                     container.UnregisterHandler(typeof(INavigationService), activeWindow.NavigationServiceName);
