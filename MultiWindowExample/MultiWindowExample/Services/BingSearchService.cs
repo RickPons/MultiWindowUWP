@@ -14,7 +14,7 @@ namespace MultiWindowExample.Services
         /// https://azure.microsoft.com/en-us/services/cognitive-services/?v=17.29
         /// </summary>
 
-        private string BING_IMAGE_KEY = "68778f8a17d04e9ca06b26c4414b1bcc";
+        private string BING_IMAGE_KEY = "";
         public async Task<BingImageResult> GetImagesAsync(string topic)
         {
             using(var client= new HttpClient())
