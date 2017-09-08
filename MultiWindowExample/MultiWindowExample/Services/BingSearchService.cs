@@ -10,7 +10,7 @@ namespace MultiWindowExample.Services
     public class BingSearchService : IBingSearchService
     {
         /// <summary>
-        /// This example use Microsoft Cognitive Servies (Search API) as source.
+        /// This example uses Microsoft Cognitive Servies (Search API) as source.
         /// https://azure.microsoft.com/en-us/services/cognitive-services/?v=17.29
         /// </summary>
 
