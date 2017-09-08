@@ -40,7 +40,7 @@
             ItemsSource="{Binding Images, Mode=TwoWay}">
             <Interactivity:Interaction.Behaviors>
                 <Core:EventTriggerBehavior EventName="ItemClick">
-                    <Core:InvokeCommandAction Command="{Binding ShowCarDetailsCommand}" CommandParameter="{Binding SelectedItem, ElementName=gridView}" />
+                    <Core:InvokeCommandAction Command="{Binding ShowImageDetailsCommand}" CommandParameter="{Binding SelectedItem, ElementName=gridView}" />
                 </Core:EventTriggerBehavior>
             </Interactivity:Interaction.Behaviors>
         </GridView>

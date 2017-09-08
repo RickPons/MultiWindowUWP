@@ -15,7 +15,7 @@ namespace MultiWindowExample.ViewModels
 
         IWindowManagerService windowService;
         IBingSearchService bingService;
-        public RelayCommand<object> ShowCarDetailsCommand { get; set; }
+        public RelayCommand<object> ShowImageDetailsCommand { get; set; }
         public object Parameter { get; set; }
         private string viewName;
 
@@ -37,7 +37,7 @@ namespace MultiWindowExample.ViewModels
         {
             bingService = IoC.Get<IBingSearchService>();
             windowService = IoC.Get<IWindowManagerService>();
-            ShowCarDetailsCommand = new RelayCommand<object>(ShowCarDetailsCommandExecute);
+            ShowImageDetailsCommand = new RelayCommand<object>(ShowCarDetailsCommandExecute);
         }
 
         protected override async void OnActivate()

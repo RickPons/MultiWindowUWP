@@ -17,7 +17,7 @@
                 VerticalAlignment="Center"
                 FontFamily="Segoe UI Light"
                 FontSize="48"
-                Text="Multiple Windows in UWP &amp; MVVM"
+                Text="Multiple Windows using UWP and MVVM Pattern"
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
